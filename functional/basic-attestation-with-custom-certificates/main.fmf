@@ -1,0 +1,39 @@
+summary: Tests basic keylime attestation scenario with custom certificates for keylime ansible roles in container.
+description: |
+    Running only tenant on localhost. Verifier and Registrar run in container and agents run in container.
+    Create new network for containers.
+    Generate and sign custom certificates for keylime.
+    Build container image with verifier and registrar.
+    Run verifier and registrar container.
+    Download ansible playbook for keylime verifier and registrar roles.
+    Run ansible playbook to set up verifier and registrar with custom certificates in container.
+    Build container image with agent.
+    Setup agent conf for agent container.
+    Run container with agent.
+    Register agent by verifier.
+    Verify that container passed with agent attestation.
+contact: Patrik Koncity <pkoncity@redhat.com>
+tag:
+  - container
+component:
+  - keylime
+test: ./test.sh
+framework: beakerlib
+require:
+  - url: https://github.com/RedHat-SP-Security/keylime-tests
+    ref: rhel-9-main
+    name: /Library/test-helpers
+  - library(openssl/certgen)
+  - openssl
+  - yum
+  - podman
+  - ansible-core
+  - nmap
+recommend:
+  - keylime
+duration: 10m
+enabled: true
+adjust:
+  - when: swtpm == yes
+    enabled: false
+    because: This tests needs TPM device since kernel boot
