@@ -12,6 +12,8 @@ provision:
   hardware:
     tpm:
       version: "2"
+    virtualization:
+      is-virtualized: true
 
 prepare:
   - how: shell
