@@ -62,7 +62,7 @@ rlJournalStart
         id keylime && rlRun "chown -R keylime:keylime $CERTDIR"
 
         #build verifier container
-        TAG_ATTESTATION_SERVER="attestation_server_image"
+        TAG_ATTESTATION_SERVER="keylime_server_image"
         rlRun "limeconPrepareImage ${limeLibraryDir}/${DOCKERFILE_SYSTEMD} ${TAG_ATTESTATION_SERVER}"
 
         #mandatory for access agent containers to tpm
@@ -71,33 +71,29 @@ rlJournalStart
         #run attestation server container
         rlRun "limeconRunSystemd $CONT_ATTESTATION_SERVER $TAG_ATTESTATION_SERVER $IP_ATTESTATION_SERVER $CONT_NETWORK_NAME '--hostname $CONT_ATTESTATION_SERVER --volume /var/lib/keylime/certs:/var/lib/keylime/certs:z'"
 
-        rlRun "rm -rf roles && mkdir roles"
-        pushd roles
-        rlRun "GIT_SSL_NO_VERIFY=1 git clone https://gitlab.cee.redhat.com/keylime/attestation_server.git"
-        popd
         rlRun "echo 172.18.0.4" > inventory
         rlRun "cat > playbook.yml <<EOF
 - hosts: all
   vars:
-    attestation_server_verifier_ip: \"{{ ansible_host }}\"
-    attestation_server_registrar_ip: \"{{ ansible_host }}\"
+    keylime_server_verifier_ip: \"{{ ansible_host }}\"
+    keylime_server_registrar_ip: \"{{ ansible_host }}\"
 
-    attestation_server_verifier_tls_dir: ${CERTDIR}
-    attestation_server_verifier_trusted_server_ca: [ intermediate-cacert.pem, cacert.pem]
-    attestation_server_verifier_trusted_client_ca: [ intermediate-cacert.pem, cacert.pem]
-    attestation_server_verifier_server_cert: verifier-cert.pem
-    attestation_server_verifier_server_key: verifier-key.pem
-    attestation_server_verifier_client_cert: ${CERTDIR}/verifier-client-cert.pem
-    attestation_server_verifier_client_key:  ${CERTDIR}/verifier-client-key.pem
+    keylime_server_verifier_tls_dir: ${CERTDIR}
+    keylime_server_verifier_trusted_server_ca: [ intermediate-cacert.pem, cacert.pem]
+    keylime_server_verifier_trusted_client_ca: [ intermediate-cacert.pem, cacert.pem]
+    keylime_server_verifier_server_cert: verifier-cert.pem
+    keylime_server_verifier_server_key: verifier-key.pem
+    keylime_server_verifier_client_cert: ${CERTDIR}/verifier-client-cert.pem
+    keylime_server_verifier_client_key:  ${CERTDIR}/verifier-client-key.pem
 
-    attestation_server_registrar_tls_dir: ${CERTDIR}
-    attestation_server_registrar_trusted_client_ca: [ intermediate-cacert.pem, cacert.pem]
-    attestation_server_registrar_server_cert: registrar-cert.pem
-    attestation_server_registrar_server_key: registrar-key.pem
+    keylime_server_registrar_tls_dir: ${CERTDIR}
+    keylime_server_registrar_trusted_client_ca: [ intermediate-cacert.pem, cacert.pem]
+    keylime_server_registrar_server_cert: registrar-cert.pem
+    keylime_server_registrar_server_key: registrar-key.pem
 
 
   roles:
-    - attestation_server
+    - keylime_server
 EOF"
 
         rlRun 'ansible-playbook --ssh-common-args "-o StrictHostKeychecking=no" -i inventory playbook.yml'

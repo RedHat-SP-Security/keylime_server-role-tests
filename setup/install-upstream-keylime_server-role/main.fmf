@@ -1,0 +1,10 @@
+summary: Installs upstream version of keylime_server role
+description: |
+    Downloads the upstream version of keylime_server role to /var/tmp/keylime_server-role-sources
+contact: Karel Srot <ksrot@redhat.com>
+test: ./test.sh
+framework: beakerlib
+require:
+  - git
+duration: 3m
+enabled: true

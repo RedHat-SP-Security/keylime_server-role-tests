@@ -24,7 +24,7 @@ rlJournalStart
         rlRun "limeconCreateNetwork ${CONT_NETWORK_NAME} 172.18.0.0/16"
 
         #build verifier container
-        TAG_ATTESTATION_SERVER="attestation_server_image"
+        TAG_ATTESTATION_SERVER="keylime_server_image"
         rlRun "limeconPrepareImage ${limeLibraryDir}/${DOCKERFILE_SYSTEMD} ${TAG_ATTESTATION_SERVER}"
 
         #mandatory for access agent containers to tpm
@@ -33,19 +33,15 @@ rlJournalStart
         #run verifier container
         CONT_ATTESTATION_SERVER="attestation_container"
         rlRun "limeconRunSystemd $CONT_ATTESTATION_SERVER $TAG_ATTESTATION_SERVER $IP_ATTESTATION_SERVER $CONT_NETWORK_NAME"
-        rlRun "rm -rf roles && mkdir roles"
-        pushd roles
-        rlRun "GIT_SSL_NO_VERIFY=1 git clone https://gitlab.cee.redhat.com/keylime/attestation_server.git"
-        popd
         rlRun "echo 172.18.0.4" > inventory
         rlRun "cat > playbook.yml <<EOF
 - hosts: all
   vars:
-    attestation_server_verifier_ip: \"{{ ansible_host }}\"
-    attestation_server_registrar_ip: \"{{ ansible_host }}\"
+    keylime_server_verifier_ip: \"{{ ansible_host }}\"
+    keylime_server_registrar_ip: \"{{ ansible_host }}\"
 
   roles:
-    - attestation_server
+    - keylime_server
 EOF"
         rlRun 'ansible-playbook --ssh-common-args "-o StrictHostKeychecking=no" -i inventory playbook.yml'
         sleep 5

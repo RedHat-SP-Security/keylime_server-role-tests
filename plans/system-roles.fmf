@@ -3,6 +3,8 @@ summary: run ansible system roles test with IMA policy setup
 environment:
   DOCKERFILE_AGENT: Dockerfile.agent
   DOCKERFILE_SYSTEMD: Dockerfile.systemd
+  KEYLIME_SERVER_ROLE_UPSTREAM_URL: "https://github.com/sergio-correia/keylime_server.git"
+  KEYLIME_SERVER_ROLE_UPSTREAM_BRANCH: initial
 
 context:
   swtpm: no
@@ -18,7 +20,7 @@ provision:
 prepare:
   - how: shell
     script:
-     - rpm -Uv https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm https://dl.fedoraproject.org/pub/epel/epel-next-release-latest-9.noarch.rpm
+     - rpm -Uv https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm https://dl.fedoraproject.org/pub/epel/epel-next-release-latest-9.noarch.rpm || true
     when: distro == rhel-9 or distro == centos-stream-9
 
 discover:
@@ -31,6 +33,7 @@ discover:
   - name: Run_ansible_system_roles_test
     how: fmf
     test:
+      - /setup/install-upstream-keylime_server-role
       - "/functional/.*"
 
 adjust:
