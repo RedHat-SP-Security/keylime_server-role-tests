@@ -18,7 +18,7 @@ rlJournalStart
             rlRun "GIT_SSL_NO_VERIFY=1 git clone -b ${KEYLIME_SERVER_ROLE_UPSTREAM_BRANCH} ${KEYLIME_SERVER_ROLE_UPSTREAM_URL} $SOURCE_DIR"
         fi
         rlRun "rm -f $INSTALL_DIR"
-        rlRun "cp -r $SOURCE_DIR $INSTALL_DIR"
+        rlRun "cp -rv $SOURCE_DIR $INSTALL_DIR"
         rlRun "restorecon -Rv $INSTALL_DIR"
     rlPhaseEnd
 rlJournalEnd
