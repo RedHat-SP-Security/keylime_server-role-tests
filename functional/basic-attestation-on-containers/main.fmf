@@ -19,8 +19,8 @@ component:
 test: ./test.sh
 framework: beakerlib
 require:
-  - url: https://github.com/RedHat-SP-Security/keylime-tests
-    ref: rhel-9-main
+  - url: https://github.com/ansasaki/keylime-tests.git
+    ref: generic_container
     name: /Library/test-helpers
   - yum
   - podman
