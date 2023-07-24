@@ -23,6 +23,11 @@ rlJournalStart
         #create network for containers
         rlRun "limeconCreateNetwork ${CONT_NETWORK_NAME} 172.18.0.0/16"
 
+        #preparation for ssh access
+        rlRun "rlFileBackup --clean ~/.ssh/"
+	    rlRun 'ls /root/.ssh/id_*.pub &>/dev/null || ssh-keygen -t rsa -N "" -f /root/.ssh/id_rsa'
+        rlRun "cp /root/.ssh/id_*.pub ."
+
         #build verifier container
         TAG_ATTESTATION_SERVER="keylime_server_image"
         rlRun "limeconPrepareImage ${limeLibraryDir}/${DOCKERFILE_SYSTEMD} ${TAG_ATTESTATION_SERVER}"
@@ -90,6 +95,7 @@ EOF"
         limeSubmitCommonLogs
         limeClearData
         limeRestoreConfig
+        rlRun "rlFileRestore"
     rlPhaseEnd
 
 rlJournalEnd
