@@ -3,8 +3,8 @@ summary: run ansible system roles test with IMA policy setup
 environment:
   DOCKERFILE_AGENT: Dockerfile.agent
   DOCKERFILE_SYSTEMD: Dockerfile.systemd
-  KEYLIME_SERVER_ROLE_UPSTREAM_URL: "https://github.com/sergio-correia/keylime_server.git"
-  KEYLIME_SERVER_ROLE_UPSTREAM_BRANCH: initial
+  KEYLIME_SERVER_ROLE_UPSTREAM_URL: "https://github.com/linux-system-roles/keylime_server.git"
+  KEYLIME_SERVER_ROLE_UPSTREAM_BRANCH: main
 
 context:
   swtpm: no
