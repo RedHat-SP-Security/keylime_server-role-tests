@@ -1,0 +1,39 @@
+summary: Test basic keylime attestation scenario on multiple hosts with custom certificates and postgresql database
+description: |
+ Running services on different systems - verifier + registrar + tenant ( verifier and registrar configured using a keylime_server role ), agent, setup server.
+ Uses custom build certificates.
+ Setup postgresql database.
+ On setup server via server role  configure verifier and registrar. 
+ Starts verifier, registrar, agent.
+ Registers agent providing a payload with autorun.sh and python revocation script.
+ Verifiers that systems passed attestation and autorun.sh has been executed.
+ Does changes on a system with agent and verifies that system has failed attestation.
+ Confirms that the revocation script has been executed on agent unless revocation is disabled through the KEYLIME_TEST_DISABLE_REVOCATION environment variable.
+contact: Patrik Koncity <pkoncity@redhat.com>
+component:
+  - keylime
+test: ./test.sh
+framework: beakerlib
+tag:
+  - multihost
+require:
+  - url: https://github.com/RedHat-SP-Security/keylime-tests
+    ref: rhel-9.2.0
+    name: /Library/test-helpers
+  - url: https://github.com/RedHat-SP-Security/keylime-tests
+    ref: rhel-9.2.0
+    name: /Library/sync
+  - ansible-core
+  - bind-utils
+  - library(openssl/certgen)
+  - rhel-system-roles
+  - yum
+  - expect
+  - postgresql-server
+  - postgresql-contrib
+  - python3-psycopg2
+recommend:
+  - keylime
+  - python3-toml
+duration: 10m
+enabled: true

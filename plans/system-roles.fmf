@@ -27,7 +27,7 @@ discover:
   - name: Configure_simple_IMA_policy
     how: fmf
     url: https://github.com/RedHat-SP-Security/keylime-tests
-    ref: rhel-9-main
+    ref: "@.tmt/dynamic_ref.fmf"
     test:
       - /setup/configure_kernel_ima_module/ima_policy_simple
   - name: Run_ansible_system_roles_test
