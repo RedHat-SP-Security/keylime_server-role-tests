@@ -6,5 +6,6 @@ test: ./test.sh
 framework: beakerlib
 require:
   - git
+  - rpm-build
 duration: 3m
 enabled: true

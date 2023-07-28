@@ -41,7 +41,7 @@ rlJournalStart
     keylime_server_registrar_ip: \"{{ ansible_host }}\"
 
   roles:
-    - keylime_server
+    - rhel-system-roles.keylime_server
 EOF"
         rlRun 'ansible-playbook -v --ssh-common-args "-o StrictHostKeychecking=no" -i inventory playbook.yml'
         sleep 5

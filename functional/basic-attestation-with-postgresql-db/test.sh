@@ -57,7 +57,7 @@ rlJournalStart
     keylime_server_registrar_database_url: \"postgresql://registrar:regi@${HOST_IP}/registrardb\"
 
   roles:
-    - keylime_server
+    - rhel-system-roles.keylime_server
 EOF"
         rlRun 'ansible-playbook -v --ssh-common-args "-o StrictHostKeychecking=no" -i inventory playbook.yml'
         sleep 5
