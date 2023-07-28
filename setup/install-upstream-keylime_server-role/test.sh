@@ -6,10 +6,17 @@
 [ -n "${KEYLIME_SERVER_ROLE_UPSTREAM_BRANCH}" ] || KEYLIME_SERVER_ROLE_UPSTREAM_BRANCH="main"
 
 SOURCE_DIR=/var/tmp/keylime_server-role-sources
-INSTALL_DIR=/usr/share/ansible/roles/keylime_server
+INSTALL_DIR=/usr/share/ansible/roles/rhel-system-roles.keylime_server
 
 rlJournalStart
     rlPhaseStartTest
+        # remove all install keylime packages
+        rlRun "yum remove -y rhel-system-roles\*"
+        # build and install dummy rpm package
+        rlRun -s "rpmbuild -bb rhel-system-roles-keylime_server.spec"
+        RPMPKG=$( awk '/Wrote:/ { print $2 }' $rlRun_LOG )
+        # replace installed keylime with our newly built dummy package
+        rlRun "rpm -Uvh $RPMPKG"
         if [ -d $SOURCE_DIR ]; then
             rlLogInfo "Using already downloaded sources in $SOURCE_DIR"
         else
