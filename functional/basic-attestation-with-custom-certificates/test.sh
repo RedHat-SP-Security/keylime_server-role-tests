@@ -121,16 +121,16 @@ EOF"
         rlRun "limeUpdateConf agent trusted_client_ca '\"/var/lib/keylime/cv_ca/cacert.pem\"'"
         rlRun "limeconPrepareAgentConfdir $AGENT_ID $IP_AGENT confdir_$CONT_AGENT"
 
-        # create allowlist and excludelist
+        # create runtime policy
         TESTDIR=`limeCreateTestDir`
-        rlRun "limeCreateTestLists ${TESTDIR}/*"
+        rlRun "limeCreateTestPolicy ${TESTDIR}/*"
 
         rlRun "limeconRunAgent $CONT_AGENT $TAG_AGENT $IP_AGENT $CONT_NETWORK_NAME $PWD/confdir_$CONT_AGENT $TESTDIR"
         rlRun "limeWaitForAgentRegistration ${AGENT_ID}"
     rlPhaseEnd
 
     rlPhaseStartTest "Add keylime agent"
-        rlRun -s "keylime_tenant -v $IP_ATTESTATION_SERVER  -t $IP_AGENT -u $AGENT_ID --allowlist allowlist.txt --exclude excludelist.txt -f excludelist.txt -c add"
+        rlRun -s "keylime_tenant -v $IP_ATTESTATION_SERVER  -t $IP_AGENT -u $AGENT_ID --runtime-policy policy.json -f /etc/hostname -c add"
         rlRun "limeWaitForAgentStatus $AGENT_ID 'Get Quote'"
         rlRun -s "keylime_tenant -c cvlist"
         rlAssertGrep "{'code': 200, 'status': 'Success', 'results': {'uuids':.*'$AGENT_ID'" $rlRun_LOG -E
