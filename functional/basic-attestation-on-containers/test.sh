@@ -66,7 +66,7 @@ EOF"
 
         # create runtime policy
         TESTDIR=`limeCreateTestDir`
-        rlRun "limeCreateTestPolicy ${TESTDIR}/*"
+        rlRun "limeCreateTestPolicy"
 
         rlRun "limeconRunAgent $CONT_AGENT $TAG_AGENT $IP_AGENT $CONT_NETWORK_NAME $PWD/confdir_$CONT_AGENT $TESTDIR"
         rlRun "limeWaitForAgentRegistration ${AGENT_ID}"
