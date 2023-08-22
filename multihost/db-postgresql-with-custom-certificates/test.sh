@@ -347,6 +347,7 @@ rlJournalStart
         #preparing ssh keys for mutual connection
         #in future can moved to new sync lib func
         rlRun "cp ssh_keys/* ~/.ssh/"
+        rlRun "chmod 700  ~/.ssh/id_rsa_multihost*"
         rlRun "cat ~/.ssh/id_rsa_multihost.pub >> ~/.ssh/authorized_keys"
 
         rlRun "TmpDir=\$(mktemp -d)" 0 "Creating tmp directory"
