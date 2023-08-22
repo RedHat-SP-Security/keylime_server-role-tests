@@ -137,7 +137,7 @@ _EOF"
         rlRun "sync-set ATTESTATION_SERVER_GENERATE_CERTS_DONE"
 
         #copy cert to agent machine
-        rlRun "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $CERTDIR/cacert.pem root@$AGENT_IP:/var/lib/keylime"
+        rlRun "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.ssh/id_rsa_multihost $CERTDIR/cacert.pem root@$AGENT_IP:/var/lib/keylime"
         rlRun "sync-block ANSIBLE_SETUP_DONE ${CONTROLLER_IP}" 0 "Waiting for ansible setup of system roles."
 
         # tenant config
@@ -232,7 +232,7 @@ Controller() {
     - rhel-system-roles.keylime_server
 EOF"
 
-        rlRun 'ansible-playbook -v --ssh-common-args "-o StrictHostKeychecking=no" -i inventory playbook.yml'
+        rlRun 'ansible-playbook -v --ssh-common-args "-o StrictHostKeychecking=no -i ~/.ssh/id_rsa_multihost" -i inventory playbook.yml'
         rlRun "sync-set ANSIBLE_SETUP_DONE"
     rlPhaseEnd
 
@@ -275,7 +275,7 @@ Agent() {
         sleep 5
         limeCreateTestPolicy
         #copy policy.json to tenant for keylime tenant add
-        rlRun "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null policy.json root@$ATTESTATION_SERVER_IP:/var/tmp/"
+        rlRun "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.ssh/id_rsa_multihost policy.json root@$ATTESTATION_SERVER_IP:/var/tmp/"
         rlRun "limeStartAgent"
         rlRun "sync-set AGENT_STARTS"
     rlPhaseEnd
