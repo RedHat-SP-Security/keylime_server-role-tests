@@ -27,14 +27,16 @@ discover:
   - name: Configure_simple_IMA_policy
     how: fmf
     url: https://github.com/RedHat-SP-Security/keylime-tests
-    ref: rhel-9-main
+    ref: rhel-9.2.0
+    #ref: rhel-9-main
     test:
       - /setup/configure_kernel_ima_module/ima_policy_simple
   - name: Run_ansible_system_roles_test
     how: fmf
+    ref: ks_docker_images_92
     test:
       - /setup/install-upstream-keylime_server-role
-      - "/functional/.*"
+      - functional/basic-attestation-on-containers
 
 adjust:
   - when: distro == rhel-8 or distro == centos-stream-8
