@@ -24,6 +24,7 @@ discover:
     test:
       - /setup/configure_kernel_ima_module/ima_policy_simple
       - /setup/configure_swtpm_device
+      - /setup/inject_SELinux_AVC_check
   - name: Run_ansible_system_roles_test
     how: fmf
     test:
