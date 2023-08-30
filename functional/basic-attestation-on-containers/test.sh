@@ -32,6 +32,18 @@ rlJournalStart
         TAG_ATTESTATION_SERVER="keylime_server_image"
         rlRun "limeconPrepareImage ${limeLibraryDir}/${DOCKERFILE_SYSTEMD} ${TAG_ATTESTATION_SERVER}"
 
+        # if TPM emulator is present
+        if limeTPMEmulated; then
+            # start tpm emulator
+            rlRun "limeStartTPMEmulator"
+            rlRun "limeWaitForTPMEmulator"
+            rlRun "limeCondStartAbrmd"
+            # start ima emulator
+            rlRun "limeInstallIMAConfig"
+            rlRun "limeStartIMAEmulator"
+        fi
+        sleep 5
+
         #mandatory for access agent containers to tpm
         rlRun "chmod o+rw /dev/tpmrm0"
 
@@ -91,6 +103,11 @@ EOF"
         rlRun "limeconDeleteNetwork $CONT_NETWORK_NAME"
         #set tmp resource manager permission to default state
         rlRun "chmod o-rw /dev/tpmrm0"
+        if limeTPMEmulated; then
+            rlRun "limeStopIMAEmulator"
+            rlRun "limeStopTPMEmulator"
+            rlRun "limeCondStopAbrmd"
+        fi
         limeExtendNextExcludelist $TESTDIR
         limeSubmitCommonLogs
         limeClearData
