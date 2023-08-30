@@ -36,6 +36,11 @@ rlJournalStart
         #create network for containers
         rlRun "limeconCreateNetwork ${CONT_NETWORK_NAME} 172.18.0.0/16"
 
+        rlRun "rlFileBackup --clean ~/.ssh/"
+        #preparation for ssh access
+        rlRun 'rm -f /root/.ssh/id_rsa* && ssh-keygen -t rsa -N "" -f /root/.ssh/id_rsa'
+        rlRun "cp /root/.ssh/id_*.pub ."
+
         #build verifier container
         TAG_ATTESTATION_SERVER="keylime_server_image"
         rlRun "limeconPrepareImage ${limeLibraryDir}/${DOCKERFILE_SYSTEMD} ${TAG_ATTESTATION_SERVER}"
