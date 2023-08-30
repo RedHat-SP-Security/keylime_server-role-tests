@@ -61,6 +61,11 @@ rlJournalStart
         # assign cert ownership to keylime user if it exists
         id keylime && rlRun "chown -R keylime:keylime $CERTDIR"
 
+        rlRun "rlFileBackup --clean ~/.ssh/"
+        #preparation for ssh access
+        rlRun 'rm -f /root/.ssh/id_rsa* && ssh-keygen -t rsa -N "" -f /root/.ssh/id_rsa'
+        rlRun "cp /root/.ssh/id_*.pub ."
+
         #build verifier container
         TAG_ATTESTATION_SERVER="keylime_server_image"
         rlRun "limeconPrepareImage ${limeLibraryDir}/${DOCKERFILE_SYSTEMD} ${TAG_ATTESTATION_SERVER}"
