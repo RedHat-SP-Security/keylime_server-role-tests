@@ -72,6 +72,8 @@ EOF"
         rlRun "limeUpdateConf tenant require_ek_cert False"
         rlRun "limeUpdateConf tenant verifier_ip $IP_ATTESTATION_SERVER"
         rlRun "limeUpdateConf tenant registrar_ip $IP_ATTESTATION_SERVER"
+        # set client_key_password to match the value on verifier
+        rlRun "limeUpdateConf tenant client_key_password default"
 
         #setup of agent
         rlRun "cp -r /var/lib/keylime/cv_ca ."
