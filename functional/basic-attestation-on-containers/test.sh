@@ -66,7 +66,7 @@ EOF"
 
         # create allowlist and excludelist
         TESTDIR=`limeCreateTestDir`
-        rlRun "limeCreateTestLists ${TESTDIR}/*"
+        rlRun "limeCreateTestLists"
 
         rlRun "limeconRunAgent $CONT_AGENT $TAG_AGENT $IP_AGENT $CONT_NETWORK_NAME $PWD/confdir_$CONT_AGENT $TESTDIR"
         rlRun "limeWaitForAgentRegistration ${AGENT_ID}"
