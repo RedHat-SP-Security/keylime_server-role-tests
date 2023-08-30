@@ -2,8 +2,7 @@ jobs:
 - job: tests
   trigger: pull_request
   targets:
-    centos-stream-9-x86_64:
-      distros: [RHEL-9.3.0-Nightly]
+    - centos-stream-9-x86_64
   use_internal_tf: True
   skip_build: true
   tf_extra_params:
@@ -11,3 +10,6 @@ jobs:
       - tmt:
           context:
             target_PR_branch: "main"
+        artifacts:
+          - type: repository-file
+            id: "https://raw.githubusercontent.com/RedHat-SP-Security/keylime-tests/main/tools/c9s.repo"
