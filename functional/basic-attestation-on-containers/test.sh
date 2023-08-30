@@ -25,7 +25,7 @@ rlJournalStart
 
         #preparation for ssh access
         rlRun "rlFileBackup --clean ~/.ssh/"
-	    rlRun 'ls /root/.ssh/id_*.pub &>/dev/null || ssh-keygen -t rsa -N "" -f /root/.ssh/id_rsa'
+        rlRun 'ls /root/.ssh/id_*.pub &>/dev/null || ssh-keygen -t rsa -N "" -f /root/.ssh/id_rsa'
         rlRun "cp /root/.ssh/id_*.pub ."
 
         #build verifier container
@@ -73,7 +73,7 @@ EOF"
         TESTDIR=`limeCreateTestDir`
         rlRun "limeCreateTestPolicy"
 
-        rlRun "limeconRunAgent $CONT_AGENT $TAG_AGENT $IP_AGENT $CONT_NETWORK_NAME $PWD/confdir_$CONT_AGENT $TESTDIR"
+        rlRun "limeconRunAgent $CONT_AGENT $TAG_AGENT $IP_AGENT $CONT_NETWORK_NAME $TESTDIR keylime_agent $PWD/confdir_$CONT_AGENT $PWD/cv_ca"
         rlRun "limeWaitForAgentRegistration ${AGENT_ID}"
 
     rlPhaseEnd

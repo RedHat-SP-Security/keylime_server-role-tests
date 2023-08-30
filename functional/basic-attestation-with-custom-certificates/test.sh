@@ -130,7 +130,7 @@ EOF"
         TESTDIR=`limeCreateTestDir`
         rlRun "limeCreateTestPolicy"
 
-        rlRun "limeconRunAgent $CONT_AGENT $TAG_AGENT $IP_AGENT $CONT_NETWORK_NAME $PWD/confdir_$CONT_AGENT $TESTDIR"
+        rlRun "limeconRunAgent $CONT_AGENT $TAG_AGENT $IP_AGENT $CONT_NETWORK_NAME $TESTDIR keylime_agent $PWD/confdir_$CONT_AGENT $PWD/cv_ca"
         rlRun "limeWaitForAgentRegistration ${AGENT_ID}"
     rlPhaseEnd
 
