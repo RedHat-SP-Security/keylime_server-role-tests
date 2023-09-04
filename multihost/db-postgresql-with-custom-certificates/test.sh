@@ -34,6 +34,11 @@
 # to make user that sync events have unique names and there are not
 # collisions with former test runs
 
+# define KEYLIME_SERVER_ANSIBLE_ROLE if not set already
+# rhel-system-roles.keylime_server = legacy ansible role format
+# redhat.rhel_system_roles.keylime_server = collection ansible role format
+[ -z "${KEYLIME_SERVER_ANSIBLE_ROLE}" ] && KEYLIME_SERVER_ANSIBLE_ROLE="rhel-system-roles.keylime_server"
+
 function assign_server_roles() {
     if [ -f ${TMT_TOPOLOGY_BASH} ]; then
         # assign roles based on tmt topology data
@@ -230,7 +235,7 @@ Controller() {
     keylime_server_registrar_database_url: \"postgresql://registrar:regi@${ATTESTATION_SERVER_IP}/registrardb\"
 
   roles:
-    - rhel-system-roles.keylime_server
+    - ${KEYLIME_SERVER_ANSIBLE_ROLE}
 EOF"
 
         rlRun 'ansible-playbook -v --ssh-common-args "-o StrictHostKeychecking=no -i ~/.ssh/id_rsa_multihost" -i inventory playbook.yml'
