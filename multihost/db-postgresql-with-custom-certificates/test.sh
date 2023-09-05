@@ -72,6 +72,16 @@ function get_IP() {
 
 Attestation_server() {
     rlPhaseStartSetup "Attestation server setup"
+        rpm -q keylime-verifier 2> /dev/null && INSTALL_PKGS="$INSTALL_PKGS keylime-verifier"
+        rpm -q keylime-registrar 2> /dev/null && INSTALL_PKGS="$INSTALL_PKGS keylime-registrar"
+        [ -n "$INSTALL_PKGS" ] && rlRun "dnf --noautoremove -y remove $INSTALL_PKGS"
+
+        if [ -n "$INSTALL_PKGS" ]; then
+            for comp in verifier registrar; do
+                rlRun "rm -rf /etc/keylime/$comp.conf*"
+            done
+        fi
+
         AGENT_ID="d432fbb3-d2f1-4a97-9ef7-75bd81c00000"
         CERTDIR=/var/lib/keylime/certs
         # import keylime library
