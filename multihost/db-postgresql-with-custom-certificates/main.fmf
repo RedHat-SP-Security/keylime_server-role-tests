@@ -33,7 +33,6 @@ require:
   - postgresql-contrib
   - python3-psycopg2
 recommend:
-  - keylime
   - python3-toml
 duration: 10m
 enabled: true
