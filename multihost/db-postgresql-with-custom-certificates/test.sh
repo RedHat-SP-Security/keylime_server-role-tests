@@ -74,6 +74,9 @@ Attestation_server() {
     rlPhaseStartSetup "Attestation server setup"
         AGENT_ID="d432fbb3-d2f1-4a97-9ef7-75bd81c00000"
         CERTDIR=/var/lib/keylime/certs
+        # import keylime library
+        rlRun 'rlImport "keylime-tests/test-helpers"' || rlDie "cannot import keylime-tests/test-helpers library"
+        limeBackupConfig
         # generate TLS certificates for all
         # we are going to use 4 certificates
         # verifier = webserver cert used for the verifier server
@@ -143,10 +146,14 @@ _EOF"
         rlRun "sync-block AGENT_SSH_SETUP_DONE ${AGENT_IP}" 0 "Wait for start machine where will be agent."
 
         #copy cert to agent machine
-        rlRun "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.ssh/id_rsa_multihost $CERTDIR/cacert.pem root@$AGENT_IP:/var/lib/keylime"
+        rlRun "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.ssh/id_rsa_multihost $CERTDIR/cacert.pem root@$AGENT_IP:/var/tmp/keylime-cacert.pem"
         rlRun "sync-block ANSIBLE_SETUP_DONE ${CONTROLLER_IP}" 0 "Waiting for ansible setup of system roles."
 
         # tenant config
+        rlRun "yum -y install keylime-tenant"
+        rlAssertRpm keylime-tenant
+        rlAssertRpm keylime-verifier
+        rlAssertRpm keylime-registrar
         rlRun "limeUpdateConf tenant require_ek_cert False"
         rlRun "limeUpdateConf tenant verifier_ip $ATTESTATION_SERVER_IP"
         rlRun "limeUpdateConf tenant registrar_ip $ATTESTATION_SERVER_IP"
@@ -242,16 +249,25 @@ EOF"
         rlRun "sync-set ANSIBLE_SETUP_DONE"
     rlPhaseEnd
 
+    rlPhaseStartCleanup "Controller cleanup"
+        limeClearData
+        limeRestoreConfig
+    rlPhaseEnd
 }
 
 Agent() {
     rlPhaseStartSetup "Agent setup"
         AGENT_ID="d432fbb3-d2f1-4a97-9ef7-75bd81c00000"
         rlRun "sync-set AGENT_SSH_SETUP_DONE"
+        # import keylime library
+        rlRun 'rlImport "keylime-tests/test-helpers"' || rlDie "cannot import keylime-tests/test-helpers library"
+        limeBackupConfig
+        rlRun "yum -y install keylime-agent-rust python3-keylime"
+        rlAssertRpm keylime-agent-rust
         CV_CA=/var/lib/keylime/cv_ca
         rlRun "mkdir -p $CV_CA"
         rlRun "sync-block ATTESTATION_SERVER_START ${ATTESTATION_SERVER_IP}" 0 "Waiting for the attestation server finish to start"
-        rlRun "cp /var/lib/keylime/cacert.pem /var/lib/keylime/cv_ca/"
+        rlRun "cp /var/tmp/keylime-cacert.pem /var/lib/keylime/cv_ca/cacert.pem"
         id keylime && rlRun "chown -R keylime:keylime ${CV_CA}"
 
         rlRun "limeUpdateConf agent ip '\"${AGENT_IP}\"'"
@@ -322,6 +338,8 @@ Agent() {
         limeSubmitCommonLogs
         limeExtendNextExcludelist $TESTDIR
         rlRun "rm -f /var/tmp/test_payload_file"
+        limeClearData
+        limeRestoreConfig
     rlPhaseEnd
 }
 
@@ -333,10 +351,6 @@ export TESTSOURCEDIR=`pwd`
 
 rlJournalStart
     rlPhaseStartSetup
-        # import keylime library
-        if rpm -q keylime 2>/dev/null;then
-            rlRun 'rlImport "keylime-tests/test-helpers"' || rlDie "cannot import keylime-tests/test-helpers library"
-        fi
         rlRun 'rlImport "keylime-tests/sync"' || rlDie "cannot import keylime-tests/sync library"
         rlRun 'rlImport "certgen/certgen"' || rlDie "cannot import openssl/certgen library"
 
@@ -358,11 +372,6 @@ rlJournalStart
         rlRun "chmod 700 ~/.ssh/id_rsa_multihost.pub ~/.ssh/id_rsa_multihost"
 
         rlRun "TmpDir=\$(mktemp -d)" 0 "Creating tmp directory"
-        if rpm -q keylime 2>/dev/null;then
-            rlAssertRpm keylime
-            # backup files
-            limeBackupConfig
-        fi
         # load REVOCATION_SCRIPT_TYPE
         REVOCATION_SCRIPT_TYPE=script
         rlRun "cp -rf payload-${REVOCATION_SCRIPT_TYPE} $TmpDir"
@@ -385,13 +394,6 @@ rlJournalStart
     rlPhaseStartCleanup
         rlRun "popd"
         rlRun "rm -r $TmpDir" 0 "Removing tmp directory"
-        if rpm -q keylime 2>/dev/null;then
-            #################
-            # common cleanup
-            #################
-            limeClearData
-            limeRestoreConfig
-        fi
         rlRun "rlFileRestore"
     rlPhaseEnd
 
