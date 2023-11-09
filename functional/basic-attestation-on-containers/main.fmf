@@ -30,7 +30,3 @@ recommend:
   - keylime
 duration: 10m
 enabled: true
-adjust:
-  - when: swtpm == yes
-    enabled: false
-    because: This tests needs TPM device since kernel boot
