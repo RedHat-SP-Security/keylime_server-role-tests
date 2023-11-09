@@ -26,6 +26,8 @@ rlJournalStart
         fi
         rlRun "rm -f $INSTALL_DIR"
         rlRun "cp -rv $SOURCE_DIR $INSTALL_DIR"
+        # install collection requirements, see https://github.com/linux-system-roles/keylime_server/pull/24
+        [ -f "$SOURCE_DIR/meta/collection-requirements.yml" ] && rlRun "ansible-galaxy collection install -vv -r $SOURCE_DIR/meta/collection-requirements.yml"
         rlRun "restorecon -Rv $INSTALL_DIR"
     rlPhaseEnd
 rlJournalEnd
