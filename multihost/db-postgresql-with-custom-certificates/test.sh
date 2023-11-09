@@ -255,7 +255,7 @@ Controller() {
     - ${KEYLIME_SERVER_ANSIBLE_ROLE}
 EOF"
 
-        rlRun 'ansible-playbook -v --ssh-common-args "-o StrictHostKeychecking=no -i ~/.ssh/id_rsa_multihost" -i inventory playbook.yml'
+        rlRun 'ansible-playbook -vvv --ssh-common-args "-o StrictHostKeychecking=no -i ~/.ssh/id_rsa_multihost" -i inventory playbook.yml'
         rlRun "sync-set ANSIBLE_SETUP_DONE"
     rlPhaseEnd
 

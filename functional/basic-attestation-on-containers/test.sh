@@ -57,7 +57,7 @@ rlJournalStart
   roles:
     - rhel-system-roles.keylime_server
 EOF"
-        rlRun 'ansible-playbook -v --ssh-common-args "-o StrictHostKeychecking=no" -i inventory playbook.yml'
+        rlRun 'ansible-playbook -vvv --ssh-common-args "-o StrictHostKeychecking=no" -i inventory playbook.yml'
         sleep 5
         rlRun "rm -f /var/lib/keylime/cv_ca/*"
         rlRun "podman cp $CONT_ATTESTATION_SERVER:/var/lib/keylime/cv_ca /var/lib/keylime/"
