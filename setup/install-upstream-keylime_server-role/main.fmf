@@ -7,5 +7,7 @@ framework: beakerlib
 require:
   - git
   - rpm-build
+recommend:
+  - ansible-core
 duration: 3m
 enabled: true
