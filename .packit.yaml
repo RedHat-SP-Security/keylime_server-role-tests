@@ -3,7 +3,6 @@ jobs:
   trigger: pull_request
   targets:
     - centos-stream-9-x86_64
-  use_internal_tf: True
   skip_build: true
   tf_extra_params:
     environments:
