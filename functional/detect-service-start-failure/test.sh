@@ -42,6 +42,7 @@ rlJournalStart
         rlRun "pushd $TmpDir"
         # import keylime library
         rlRun 'rlImport "keylime-tests/test-helpers"' || rlDie "cannot import keylime-tests/test-helperss library"
+        rlRun "rpm -qa | grep rhel-system-roles" 0,1
         limeBackupConfig
         rlFileBackup --missing-ok --clean /etc/ansible/hosts
 

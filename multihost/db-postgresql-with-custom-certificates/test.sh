@@ -225,6 +225,7 @@ _EOF"
 
 Controller() {
     rlPhaseStartTest "Role setup"
+        rlRun "rpm -qa | grep rhel-system-roles" 0,1
         CERTDIR=/var/lib/keylime/certs
         rlRun "sync-block ATTESTATION_SERVER_GENERATE_CERTS_DONE ${ATTESTATION_SERVER_IP}" 0 "Waiting for generating certs on attestation server."
 
