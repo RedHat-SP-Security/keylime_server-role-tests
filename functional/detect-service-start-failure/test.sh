@@ -63,7 +63,7 @@ rlJournalStart
 
         rlRun "echo '$IP_ATTESTATION_SERVER' > /etc/ansible/hosts"
         # shorten limeTIMEOUT so we won't be waiting too long
-        export limeTIMEOUT=5
+        export limeTIMEOUT=10
     rlPhaseEnd
 
     rlPhaseStartTest "Incorrect verifier setup"
@@ -82,6 +82,7 @@ _EOF"
         # verify that the verifier is not running
         rlRun "limeWaitForVerifier 8881 $IP_ATTESTATION_SERVER" 1
         rlRun "limeconStop $CONT_ATTESTATION_SERVER"
+	sleep 3
     rlPhaseEnd
 
     rlPhaseStartTest "Incorrect registrar setup"
