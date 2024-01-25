@@ -14,6 +14,7 @@ rlJournalStart
 
         rlRun 'rlImport "keylime-tests/test-helpers"'|| rlDie "cannot import /keylime-tests/test-helpers library"
         rlAssertRpm keylime
+        rlRun "rpm -qa | grep rhel-system-roles" 0,1
 
         # backup and configure postgresql db
 	rlRun "HOST_IP=\$(hostname -I | cut -d ' ' -f 1)"

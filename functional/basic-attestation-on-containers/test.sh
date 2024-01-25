@@ -15,6 +15,7 @@ rlJournalStart
         rlRun 'rlImport "keylime-tests/test-helpers"'|| rlDie "cannot import /keylime-tests/test-helpers library"
 
         rlAssertRpm keylime
+        rlRun "rpm -qa | grep rhel-system-roles" 0,1
         # update /etc/keylime.conf
         limeBackupConfig
         CONT_NETWORK_NAME="container_network"
