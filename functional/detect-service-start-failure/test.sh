@@ -88,7 +88,7 @@ _EOF"
 
     rlPhaseStartTest "Incorrect registrar setup"
         rlRun "limeconRunSystemd $CONT_ATTESTATION_SERVER $TAG_ATTESTATION_SERVER $IP_ATTESTATION_SERVER $CONT_NETWORK_NAME '--hostname $CONT_ATTESTATION_SERVER'"
-        rlWaitForCmd "limeCheckRemotePort 22 IP_ATTESTATION_SERVER" -m ${limeTIMEOUT} -t ${limeTIMEOUT} -d 1
+        rlWaitForCmd "limeCheckRemotePort 22 $IP_ATTESTATION_SERVER" -m ${limeTIMEOUT} -t ${limeTIMEOUT} -d 1
         rlRun "cat > keylime-playbook.yml <<_EOF
 ---
 - name: Manage keylime servers
