@@ -85,6 +85,7 @@ rlJournalStart
 
         #run attestation server container
         rlRun "limeconRunSystemd $CONT_ATTESTATION_SERVER $TAG_ATTESTATION_SERVER $IP_ATTESTATION_SERVER $CONT_NETWORK_NAME '--hostname $CONT_ATTESTATION_SERVER --volume /var/lib/keylime/certs:/var/lib/keylime/certs:z'"
+        rlWaitForCmd "limeCheckRemotePort 22 IP_ATTESTATION_SERVER" -m ${limeTIMEOUT} -t ${limeTIMEOUT} -d 1
 
         rlRun "echo 172.18.0.4" > inventory
         rlRun "cat > playbook.yml <<EOF

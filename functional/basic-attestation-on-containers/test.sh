@@ -48,6 +48,7 @@ rlJournalStart
         #run verifier container
         CONT_ATTESTATION_SERVER="attestation_container"
         rlRun "limeconRunSystemd $CONT_ATTESTATION_SERVER $TAG_ATTESTATION_SERVER $IP_ATTESTATION_SERVER $CONT_NETWORK_NAME"
+        rlWaitForCmd "limeCheckRemotePort 22 IP_ATTESTATION_SERVER" -m ${limeTIMEOUT} -t ${limeTIMEOUT} -d 1
         rlRun "echo 172.18.0.4" > inventory
         rlRun "cat > playbook.yml <<EOF
 - hosts: all
