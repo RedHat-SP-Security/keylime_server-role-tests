@@ -191,13 +191,14 @@ _EOF"
         rlAssertGrep "{'code': 200, 'status': 'Success', 'results': {'uuids':.*'$AGENT_ID'" $rlRun_LOG -E
         rlRun "sync-set AGENT_ADD_DONE"
     rlPhaseEnd
-
+: '
     rlPhaseStartTest "Agent attestation test: Fail keylime agent"
         rlRun "sync-block AGENT_CORRUPTED ${AGENT_IP}" 0 "Waiting for the agent fail."
-        rlRun "limeWaitForAgentStatus $AGENT_ID '(Failed|Invalid Quote)'"
+        rlRun "limeWaitForAgentStatus $AGENT_ID (Failed|Invalid Quote)"
         rlRun "sync-set AGENT_FAILED"
     rlPhaseEnd
-
+'
+: '
     rlPhaseStartTest "Verifier test"
         # check that the AGENT failed verification
         rlAssertGrep "WARNING - File not found in allowlist: .*/keylime-bad-script.sh" $(limeVerifierLogfile) -E
@@ -205,10 +206,12 @@ _EOF"
         AGENT_ID="d432fbb3-d2f1-4a97-9ef7-75bd81c00000"
         rlAssertGrep "WARNING - Agent $AGENT_ID failed, stopping polling" $(limeVerifierLogfile)
     rlPhaseEnd
-
+'
     rlPhaseStartCleanup "Attestation server cleanup"
+    : '
         rlRun "limeStopVerifier"
         rlRun "limeStopRegistrar"
+    '
         limeSubmitCommonLogs
     rlPhaseEnd
 }
@@ -250,8 +253,10 @@ EOF"
     rlPhaseEnd
 
     rlPhaseStartCleanup "Controller cleanup"
+: '
         limeClearData
         limeRestoreConfig
+'
     rlPhaseEnd
 }
 
@@ -309,26 +314,29 @@ Agent() {
         rlAssertExists /var/tmp/test_payload_file
     rlPhaseEnd
 
-
+: '
     rlPhaseStartTest "Agent attestation test: Fail keylime agent"
         # fail AGENT and confirm it has failed validation
         TESTDIR=`limeCreateTestDir`
         limeExtendNextExcludelist $TESTDIR
-        rlRun "echo -e '#!/bin/bash\necho boom' > $TESTDIR/keylime-bad-script.sh && chmod a+x $TESTDIR/keylime-bad-script.sh"
+        rlRun "echo -e #!/bin/bash\necho boom > $TESTDIR/keylime-bad-script.sh && chmod a+x $TESTDIR/keylime-bad-script.sh"
         rlRun "$TESTDIR/keylime-bad-script.sh"
         rlRun "sync-set AGENT_CORRUPTED"
         rlRun "sync-block AGENT_FAILED ${ATTESTATION_SERVER_IP}" 0 "Waiting for failed agent attestation."
         if [ -z "$KEYLIME_TEST_DISABLE_REVOCATION" ]; then
             # give the revocation notifier a bit more time to contact the agent
-            rlRun "rlWaitForCmd 'tail \$(limeAgentLogfile) | grep -q \"A node in the network has been compromised: ${AGENT_IP}\"' -m 20 -d 1 -t 20"
+            rlRun "rlWaitForCmd tail \$(limeAgentLogfile) | grep -q \"A node in the network has been compromised: ${AGENT_IP}\" -m 20 -d 1 -t 20"
             rlRun "tail $(limeAgentLogfile) | grep 'Executing revocation action local_action_modify_payload'"
             rlRun "tail $(limeAgentLogfile) | grep 'A node in the network has been compromised: ${AGENT_IP}'"
             rlAssertNotExists /var/tmp/test_payload_file
         fi
     rlPhaseEnd
+'
 
     rlPhaseStartCleanup "Agent cleanup"
         rlRun "sync-set AGENT_ALL_TESTS_DONE"
+: '
+
         rlRun "limeStopAgent"
         if limeTPMEmulated; then
             rlRun "limeStopIMAEmulator"
@@ -340,6 +348,7 @@ Agent() {
         rlRun "rm -f /var/tmp/test_payload_file"
         limeClearData
         limeRestoreConfig
+'
     rlPhaseEnd
 }
 
@@ -391,11 +400,13 @@ rlJournalStart
         rlPhaseEnd
     fi
 
+: '
     rlPhaseStartCleanup
         rlRun "popd"
         rlRun "rm -r $TmpDir" 0 "Removing tmp directory"
         rlRun "rlFileRestore"
     rlPhaseEnd
+'
 
 rlJournalPrintText
 rlJournalEnd

@@ -14,14 +14,14 @@ provision:
   - name: attestation_server
     role: attestation_server
     how: connect
-    guest: 10.0.184.236
+    guest: 10.0.186.20
     password: toor
 #    how: minute
 #    image: 1MT-RHEL-9.3.0-20230816.0
   - name: agent
     role: agent
     how: connect
-    guest: 10.0.185.43
+    guest: 10.0.187.76
     password: toor
 #    how: minute
 #    image: 1MT-RHEL-9.3.0-20230816.0
@@ -30,7 +30,7 @@ provision:
 #    how: minute
 #    image: 1MT-RHEL-8.9.0-20230816.24
     how: connect
-    guest: 10.0.185.207
+    guest: 10.0.187.20
     password: toor  
 discover:
   - name: setup agent with swtpm and IMA
