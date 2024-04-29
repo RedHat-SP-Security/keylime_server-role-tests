@@ -1,0 +1,69 @@
+# not yet supported by the production tmt and Testing Farm
+# run as: tmt run -vvv discover plan -n multihost provision prepare execute report finish
+summary: run keylime multihost test Multihost/basic-attestation
+
+environment:
+  KEYLIME_SERVER_ROLE_UPSTREAM_URL: "https://github.com/linux-system-roles/keylime_server.git"
+  KEYLIME_SERVER_ROLE_UPSTREAM_BRANCH: main
+
+context:
+  swtpm: yes
+  agent: rust
+
+provision:
+  - name: attestation_server
+    role: attestation_server
+    how: connect
+    guest: 10.0.184.236
+    password: toor
+#    how: minute
+#    image: 1MT-RHEL-9.3.0-20230816.0
+  - name: agent
+    role: agent
+    how: connect
+    guest: 10.0.185.43
+    password: toor
+#    how: minute
+#    image: 1MT-RHEL-9.3.0-20230816.0
+  - name: controller
+    role: controller
+#    how: minute
+#    image: 1MT-RHEL-8.9.0-20230816.24
+    how: connect
+    guest: 10.0.185.207
+    password: toor  
+discover:
+  - name: setup agent with swtpm and IMA
+    how: fmf
+    url: https://github.com/RedHat-SP-Security/keylime-tests
+    ref: main
+    where:
+      - agent
+    test:
+      - /setup/configure_tpm_emulator
+      - /setup/configure_kernel_ima_module/ima_policy_signing
+  - name: upstream install 
+    how: fmf
+    where:
+      - controller
+    test:
+      - /setup/install-upstream-keylime_server-role
+  - name: test
+    how: fmf
+    where:
+      - attestation_server
+      - agent
+      - controller
+    test:
+      - /multihost/db-postgresql-with-custom-certificates
+
+execute:
+  how: tmt
+
+adjust:
+  - when: distro == centos-stream-9
+    prepare+:
+      - how: shell
+        script:
+          - dnf -y install epel-release epel-next-release
+          - yum -y install beakerlib
