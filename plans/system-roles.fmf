@@ -5,22 +5,18 @@ environment:
   DOCKERFILE_SYSTEMD: Dockerfile.systemd
   KEYLIME_SERVER_ROLE_UPSTREAM_URL: "https://github.com/linux-system-roles/keylime_server.git"
   KEYLIME_SERVER_ROLE_UPSTREAM_BRANCH: main
+  NETAVARK_FW: nftables
 
 context:
   swtpm: no
   agent: rust
 
-prepare:
-  - how: shell
-    script:
-     - rpm -Uv https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm https://dl.fedoraproject.org/pub/epel/epel-next-release-latest-9.noarch.rpm || true
-    when: distro == rhel-9 or distro == centos-stream-9
 
 discover:
   - name: Configure_test_system
     how: fmf
     url: https://github.com/RedHat-SP-Security/keylime-tests
-    ref: rhel-9-main
+    ref: "@.tmt/dynamic_ref.fmf"
     test:
       - /setup/configure_kernel_ima_module/ima_policy_simple
       - /setup/configure_swtpm_device
@@ -35,6 +31,12 @@ adjust:
   - when: distro == rhel-8 or distro == centos-stream-8
     enabled: false
     because: keylime is not shipped for RHEL-8
+
+  - when: distro == rhel-9 or distro == centos-stream-9
+    prepare+:
+      - how: shell
+        script:
+          - rpm -Uv https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm https://dl.fedoraproject.org/pub/epel/epel-next-release-latest-9.noarch.rpm || true
 
 execute:
   how: tmt
