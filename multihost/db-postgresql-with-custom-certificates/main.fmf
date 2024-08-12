@@ -34,5 +34,7 @@ require:
   - python3-psycopg2
 recommend:
   - python3-toml
+  - python3-tomli
+
 duration: 10m
 enabled: true
