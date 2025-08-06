@@ -1,13 +1,13 @@
 summary: Test that keylime service start failure is reported by ansible role
 description: |
-  Uses container as a managed host.
-  Prepares inventory file.
-  Prepares playbook with invalid verifier configuration.
-  Executes playbook.
-  Verifies that a failure is reported.
-  Prepares playbook with invalid registrar configuration.
-  Executes playbook.
-  Verifies that a failure is reported.
+    Uses container as a managed host.
+    Prepares inventory file.
+    Prepares playbook with invalid verifier configuration.
+    Executes playbook.
+    Verifies that a failure is reported.
+    Prepares playbook with invalid registrar configuration.
+    Executes playbook.
+    Verifies that a failure is reported.
 contact: Karel Srot <ksrot@redhat.com>
 component:
   - keylime
@@ -23,6 +23,7 @@ require:
   - podman
 duration: 15m
 link:
- - verifies: https://issues.redhat.com/browse/RHEL-15909
- - verifies: https://issues.redhat.com/browse/RHEL-21946
+  - verifies: https://issues.redhat.com/browse/RHEL-15909
+  - verifies: https://issues.redhat.com/browse/RHEL-21946
 enabled: true
+id: 7310d9e8-f5eb-4b84-b074-d7ae491e4881

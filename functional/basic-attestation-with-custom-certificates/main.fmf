@@ -1,4 +1,5 @@
-summary: Tests basic keylime attestation scenario with custom certificates for keylime ansible roles in container.
+summary: Tests basic keylime attestation scenario with custom certificates for 
+    keylime ansible roles in container.
 description: |
     Running only tenant on localhost. Verifier and Registrar run in container and agents run in container.
     Create new network for containers.
@@ -33,3 +34,4 @@ recommend:
   - keylime
 duration: 10m
 enabled: true
+id: 0c937a81-2576-41a1-817c-abbb465d6fce
