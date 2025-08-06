@@ -1,14 +1,15 @@
-summary: Test basic keylime attestation scenario on multiple hosts with custom certificates and postgresql database
+summary: Test basic keylime attestation scenario on multiple hosts with custom 
+    certificates and postgresql database
 description: |
- Running services on different systems - verifier + registrar + tenant ( verifier and registrar configured using a keylime_server role ), agent, setup server.
- Uses custom build certificates.
- Setup postgresql database.
- On setup server via server role  configure verifier and registrar. 
- Starts verifier, registrar, agent.
- Registers agent providing a payload with autorun.sh and python revocation script.
- Verifiers that systems passed attestation and autorun.sh has been executed.
- Does changes on a system with agent and verifies that system has failed attestation.
- Confirms that the revocation script has been executed on agent unless revocation is disabled through the KEYLIME_TEST_DISABLE_REVOCATION environment variable.
+    Running services on different systems - verifier + registrar + tenant ( verifier and registrar configured using a keylime_server role ), agent, setup server.
+    Uses custom build certificates.
+    Setup postgresql database.
+    On setup server via server role  configure verifier and registrar. 
+    Starts verifier, registrar, agent.
+    Registers agent providing a payload with autorun.sh and python revocation script.
+    Verifiers that systems passed attestation and autorun.sh has been executed.
+    Does changes on a system with agent and verifies that system has failed attestation.
+    Confirms that the revocation script has been executed on agent unless revocation is disabled through the KEYLIME_TEST_DISABLE_REVOCATION environment variable.
 contact: Patrik Koncity <pkoncity@redhat.com>
 component:
   - keylime
@@ -35,6 +36,6 @@ require:
 recommend:
   - python3-toml
   - python3-tomli
-
 duration: 10m
 enabled: true
+id: 6f8b1134-1434-4f7d-af88-d692ef322e38

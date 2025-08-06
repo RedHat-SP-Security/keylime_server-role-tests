@@ -1,4 +1,5 @@
-summary: Tests basic keylime attestation scenario with keylime services using remote postgresql database
+summary: Tests basic keylime attestation scenario with keylime services using 
+    remote postgresql database
 description: |
     Running only tenant on localhost. Verifier and Registrar run in container and agents run in container.
     Configure and set up postgresql db so it can be used by keylime services.
@@ -34,3 +35,4 @@ recommend:
   - keylime
 duration: 10m
 enabled: true
+id: 34104c91-22bd-44cf-a4a4-1b579d1b4412

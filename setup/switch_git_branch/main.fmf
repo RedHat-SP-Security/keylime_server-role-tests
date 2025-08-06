@@ -9,8 +9,7 @@ tag:
 framework: beakerlib
 duration: 3m
 enabled: true
-
 adjust:
   - when: distro != rhel-9
     enabled: false
-
+id: ac85e9a5-56c9-490a-9db1-646a57cc6130
